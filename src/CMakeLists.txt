@@ -24,6 +24,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 include_directories(${GTEST_INCLUDE_DIR})
 
+add_subdirectory(frontend)
 add_subdirectory(tests)
 add_subdirectory(containers)
 add_subdirectory(backend)
