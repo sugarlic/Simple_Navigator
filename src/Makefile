@@ -28,7 +28,7 @@ open:
 open_d:
 	@$(OPEN_CMD) ${EXE_PATH_DEBUG}
 open_t:
-	@$(OPEN_CMD) ${BUILD_PATH}/exe/TESTING
+	@$(OPEN_CMD) ${BUILD_PATH}_debug/exe/TESTING
 
 install: build build_${PROJECT_NAME}
 
