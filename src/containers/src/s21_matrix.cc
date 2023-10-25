@@ -1,4 +1,4 @@
-#include "../includes/matrix.h"
+#include "s21_matrix.h"
 
 S21Matrix::S21Matrix() : matrix_{nullptr}, rows_{1}, cols_{1} {
   MatrixMemoryReallocating(1, 1);
