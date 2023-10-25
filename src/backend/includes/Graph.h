@@ -1,17 +1,19 @@
 #ifndef SRC_INCLUDES_S21_GRAPH_H
 #define SRC_INCLUDES_S21_GRAPH_H
+#include <string>
 #include <vector>
+
+#include "../../containers/matrix/includes/matrix.h"
 
 namespace s21 {
 class Graph {
  public:
-  Graph(){
-
-  };
+  Graph(){};
+  void LoadGraphFromFile(std::string filename);
+  void exportGraphToDot(std::string filename);
 
  private:
-  std::vector<std::vector<int>> not_oriented_graph_;
-  std::vector<std::vector<int>> oriented_graph_;
+  S21Matrix graph_;
 };
 };      // namespace s21
 #endif  //  SRC_INCLUDES_S21_GRAPH_H
