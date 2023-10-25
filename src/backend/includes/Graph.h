@@ -11,6 +11,7 @@ class Graph {
   Graph(){};
   void LoadGraphFromFile(std::string filename);
   void ExportGraphToDot(std::string filename);
+  S21Matrix GetGraph() { return graph_; };
 
  private:
   S21Matrix graph_;

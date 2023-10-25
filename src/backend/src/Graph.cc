@@ -6,7 +6,7 @@ void s21::Graph::LoadGraphFromFile(std::string filename) {
   std::ifstream file(filename);
   if (!file.is_open()) throw std::invalid_argument("NO FILE");
 
-  int size, num;
+  int size;
   file >> size;
   graph_.SetRows(size);
   graph_.SetCols(size);
