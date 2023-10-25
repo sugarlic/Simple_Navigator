@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "../../containers/matrix/includes/matrix.h"
+#include "s21_matrix.h"
 
 namespace s21 {
 class Graph {

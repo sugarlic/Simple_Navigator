@@ -1,4 +1,4 @@
-#include "../includes/s21_queue.h"
+#include "s21_queue.h"
 
 template <typename T>
 s21::Queue<T>::Queue() : length{}, capacity{6}, data{new T[capacity]{}} {}

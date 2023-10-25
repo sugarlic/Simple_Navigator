@@ -1,4 +1,4 @@
-#include "../includes/s21_stack.h"
+#include "s21_stack.h"
 
 template <typename T>
 s21::Stack<T>::Stack() : length{0}, capacity{6}, data{new T[capacity]{}} {}

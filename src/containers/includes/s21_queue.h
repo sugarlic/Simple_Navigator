@@ -4,8 +4,8 @@
 #include <initializer_list>
 #include <iostream>
 
-#include "../../cpp_realloc.h"
-#include "../../s21_base_container.h"
+#include "cpp_realloc.h"
+#include "s21_base_container.h"
 
 namespace s21 {
 template <typename T>

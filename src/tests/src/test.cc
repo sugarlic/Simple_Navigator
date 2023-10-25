@@ -1,5 +1,5 @@
-#include "../backend/includes/Graph.h"
-#include "../containers/matrix/includes/matrix.h"
+#include "Graph.h"
+#include "s21_matrix.h"
 
 int main() {
   s21::Graph graph;
