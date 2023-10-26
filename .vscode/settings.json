@@ -85,6 +85,7 @@
         "map": "cpp",
         "set": "cpp",
         "variant": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "filesystem": "cpp"
     }
 }
