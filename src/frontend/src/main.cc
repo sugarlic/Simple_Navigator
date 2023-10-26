@@ -1,6 +1,7 @@
 #include "Graph.h"
-#include "iostream"
+
 int main() {
-  std::cout << "Main!\n";
+  s21::Graph graph("/Users/sullustd/Simple_Navigator/src/examples/graph2.txt");
+  graph.ExportGraphToDot("/Users/sullustd/Simple_Navigator/src/examples/1.dot");
   return 0;
 }

@@ -8,7 +8,7 @@
 namespace s21 {
 class Graph {
  public:
-  Graph(){};
+  Graph(std::string filename) { LoadGraphFromFile(filename); };
   void LoadGraphFromFile(std::string filename);
   void ExportGraphToDot(std::string filename);
   S21Matrix GetGraph() { return graph_; };
