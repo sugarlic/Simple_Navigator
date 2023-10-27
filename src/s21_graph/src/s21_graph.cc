@@ -1,4 +1,4 @@
-#include "Graph.h"
+#include "s21_graph.h"
 
 void s21::Graph::LoadGraphFromFile(std::string filename) {
   std::ifstream file(filename);

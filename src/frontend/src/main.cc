@@ -1,4 +1,4 @@
-#include "Graph.h"
+#include "s21_graph.h"
 
 int main() {
   s21::Graph graph(

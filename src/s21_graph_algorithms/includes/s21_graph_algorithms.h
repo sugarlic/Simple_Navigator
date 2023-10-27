@@ -1,7 +1,7 @@
 #ifndef SRC_INCLUDES_S21_GRAPH_ALGORITHMS_H
 #define SRC_INCLUDES_S21_GRAPH_ALGORITHMS_H
 
-#include "Graph.h"
+#include "s21_graph.h"
 #include "s21_queue.h"
 #include "s21_stack.h"
 
