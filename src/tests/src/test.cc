@@ -1,9 +1,9 @@
 #include <gtest/gtest.h>
 
+#include <filesystem>
 #include <fstream>
 #include <string>
 #include <vector>
-#include <filesystem>
 
 #include "Graph.h"
 #include "s21_matrix.h"
@@ -13,9 +13,7 @@ TEST(Graph_test, test_load_from_file1) {
 }
 
 TEST(Graph_test, test_load_from_file2) {
-  EXPECT_NO_THROW(
-      s21::Graph graph("../../src/examples/graph1.txt")
-        );
+  EXPECT_NO_THROW(s21::Graph graph("../../src/examples/graph1.txt"));
 }
 
 TEST(Graph_test, test_load_from_file3) {
@@ -33,18 +31,33 @@ TEST(Graph_test, test_load_from_file3) {
   }
 }
 
-TEST(Graph_test, djikstra_test_1) {
-
-}
+TEST(Graph_test, djikstra_test_1) {}
 
 TEST(Graph_test, test_export_to_dot_file1) {
   s21::Graph graph("../../src/examples/graph2.txt");
-  graph.ExportGraphToDot(
-      "../../src/examples/test.dot");
+  graph.ExportGraphToDot("../../src/examples/test.dot");
 
   std::string answer{"graphgraph_name{0--1--3;0--2--5;0--3;1--4;}"};
   std::string test;
   std::ifstream file("../../src/examples/test.dot");
+
+  std::string str;
+  while (file >> str) {
+    test += str;
+  }
+
+  EXPECT_EQ(answer, test);
+}
+
+TEST(Graph_test, test_export_to_dot_file2) {
+  s21::Graph graph("../../src/examples/or_graph2.txt");
+  graph.ExportGraphToDot("../../src/examples/test2.dot");
+
+  std::string answer{
+      "graphgraph_name{0->1->3;0->2->5;1->4->5;2->6;2->0;6->"
+      "2;}"};
+  std::string test;
+  std::ifstream file("../../src/examples/test2.dot");
 
   std::string str;
   while (file >> str) {
