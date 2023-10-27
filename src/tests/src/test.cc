@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <filesystem>
 
 #include "Graph.h"
 #include "s21_matrix.h"
@@ -13,12 +14,12 @@ TEST(Graph_test, test_load_from_file1) {
 
 TEST(Graph_test, test_load_from_file2) {
   EXPECT_NO_THROW(
-      s21::Graph graph(
-          "/Users/sullustd/Simple_Navigator/src/examples/graph1.txt"););
+      s21::Graph graph("../../src/examples/graph1.txt")
+        );
 }
 
 TEST(Graph_test, test_load_from_file3) {
-  s21::Graph graph("/Users/sullustd/Simple_Navigator/src/examples/graph1.txt");
+  s21::Graph graph("../../src/examples/graph1.txt");
   S21Matrix graph_matrix(graph.GetGraph());
 
   std::vector<std::vector<int>> answer{
@@ -32,14 +33,18 @@ TEST(Graph_test, test_load_from_file3) {
   }
 }
 
+TEST(Graph_test, djikstra_test_1) {
+
+}
+
 TEST(Graph_test, test_export_to_dot_file1) {
-  s21::Graph graph("/Users/sullustd/Simple_Navigator/src/examples/graph2.txt");
+  s21::Graph graph("../../src/examples/graph2.txt");
   graph.ExportGraphToDot(
-      "/Users/sullustd/Simple_Navigator/src/examples/test.dot");
+      "../../src/examples/test.dot");
 
   std::string answer{"graphgraph_name{0->1->3;0->2->5;0->3;1->4;}"};
   std::string test;
-  std::ifstream file("/Users/sullustd/Simple_Navigator/src/examples/test.dot");
+  std::ifstream file("../../src/examples/test.dot");
 
   std::string str;
   while (file >> str) {
@@ -50,6 +55,9 @@ TEST(Graph_test, test_export_to_dot_file1) {
 }
 
 int main(int argc, char **argv) {
+  std::filesystem::path currentPath = std::filesystem::absolute(argv[0]);
+  std::filesystem::path parentFolder = currentPath.parent_path();
+  std::filesystem::current_path(parentFolder);
   ::testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
 }
