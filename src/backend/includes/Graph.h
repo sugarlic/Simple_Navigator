@@ -1,5 +1,6 @@
 #ifndef SRC_INCLUDES_S21_GRAPH_H
 #define SRC_INCLUDES_S21_GRAPH_H
+#include <fstream>
 #include <string>
 #include <vector>
 
@@ -15,8 +16,12 @@ class Graph {
 
  private:
   S21Matrix graph_;
+  bool is_not_oriented_;
   void RecursiveVertexSet(std::ofstream &file, S21Matrix &graph, int row,
-                          int col);
+                          int col, std::string sign);
+  bool IsNotOriented();
+  void ExportNotOriented(std::ofstream &file);
+  void ExportOriented(std::ofstream &file);
 };
 };      // namespace s21
 #endif  //  SRC_INCLUDES_S21_GRAPH_H

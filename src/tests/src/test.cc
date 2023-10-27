@@ -37,7 +37,7 @@ TEST(Graph_test, test_export_to_dot_file1) {
   graph.ExportGraphToDot(
       "/Users/sullustd/Simple_Navigator/src/examples/test.dot");
 
-  std::string answer{"graphgraph_name{0->1->3;0->2->5;0->3;1->4;}"};
+  std::string answer{"graphgraph_name{0--1--3;0--2--5;0--3;1--4;}"};
   std::string test;
   std::ifstream file("/Users/sullustd/Simple_Navigator/src/examples/test.dot");
 
