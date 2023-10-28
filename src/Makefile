@@ -29,6 +29,10 @@ open_d:
 	@$(OPEN_CMD) ${EXE_PATH_DEBUG}
 open_t:
 	@$(OPEN_CMD) ${BUILD_PATH}_debug/exe/TESTING
+s21_graph.a: build
+	@cmake --build ${BUILD_PATH} --target s21_graph --parallel 8
+s21_graph_algorithms.a: build
+	@cmake --build ${BUILD_PATH} --target s21_graph_algorithms --parallel 8
 
 install: build build_${PROJECT_NAME}
 

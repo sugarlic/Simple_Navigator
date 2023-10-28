@@ -1,6 +1,6 @@
 #include <string>
 
-#include "Graph.h"
+#include "s21_graph.h"
 #include "GraphAlgorithms.h"
 
 void ParseAnswer(const char symbol);

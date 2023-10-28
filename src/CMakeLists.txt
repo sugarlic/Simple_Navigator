@@ -30,5 +30,6 @@ include_directories(${GTEST_INCLUDE_DIR})
 add_subdirectory(frontend)
 add_subdirectory(tests)
 add_subdirectory(containers)
-add_subdirectory(backend)
+add_subdirectory(s21_graph)
+add_subdirectory(s21_graph_algorithms)
 

@@ -4,7 +4,8 @@ add_executable(${TEST_NAME}
     ${${TEST_NAME}_SRCS}
 )
 target_link_libraries(${TEST_NAME} 
-    ${P_NAME}_Backend
+    s21_graph    
+    s21_graph_algorithms
     gtest
 )
 include(GoogleTest)

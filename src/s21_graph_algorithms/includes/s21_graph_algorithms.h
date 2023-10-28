@@ -2,8 +2,7 @@
 #define SRC_INCLUDES_S21_GRAPH_ALGORITHMS_H
 
 #include <limits>
-
-#include "Graph.h"
+#include "s21_graph.h"
 #include "s21_queue.h"
 #include "s21_stack.h"
 

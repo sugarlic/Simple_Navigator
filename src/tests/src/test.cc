@@ -1,12 +1,12 @@
 #include <gtest/gtest.h>
 
+#include <filesystem>
 #include <fstream>
 #include <string>
 #include <vector>
-#include <filesystem>
 
-#include "Graph.h"
-#include "GraphAlgorithms.h"
+#include "s21_graph.h"
+#include "s21_graph_algorithms.h"
 #include "s21_matrix.h"
 
 TEST(Graph_test, test_load_from_file1) {
@@ -14,9 +14,7 @@ TEST(Graph_test, test_load_from_file1) {
 }
 
 TEST(Graph_test, test_load_from_file2) {
-  EXPECT_NO_THROW(
-      s21::Graph graph("../../src/examples/graph1.txt")
-        );
+  EXPECT_NO_THROW(s21::Graph graph("../../src/examples/graph1.txt"));
 }
 
 TEST(Graph_test, test_load_from_file3) {
@@ -88,10 +86,9 @@ TEST(Graph_test, tree_test) {
 
 TEST(Graph_test, test_export_to_dot_file1) {
   s21::Graph graph("../../src/examples/graph2.txt");
-  graph.ExportGraphToDot(
-      "../../src/examples/test.dot");
+  graph.ExportGraphToDot("../../src/examples/test.dot");
 
-  std::string answer{"graphgraph_name{0->1->3;0->2->5;0->3;1->4;}"};
+  std::string answer{"graphgraph_name{0--1--3;0--2--5;0--3;1--4;}"};
   std::string test;
   std::ifstream file("../../src/examples/test.dot");
 
