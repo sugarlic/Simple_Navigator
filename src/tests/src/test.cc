@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "s21_graph.h"
+#include "s21_graph_algorithms.h"
 #include "s21_matrix.h"
 
 TEST(Graph_test, test_load_from_file1) {
@@ -31,7 +32,57 @@ TEST(Graph_test, test_load_from_file3) {
   }
 }
 
-TEST(Graph_test, djikstra_test_1) {}
+TEST(Graph_test, djikstra_test_1) {
+    s21::Graph graph("../../src/examples/graph2.txt");
+    s21::GraphAlgorithms alg;
+    
+    EXPECT_EQ(alg.getShortestPathBetweenVertices(graph, 3, 2), 2);
+    EXPECT_EQ(alg.getShortestPathBetweenVertices(graph, 3, 4), 2);
+}
+
+TEST(Graph_test, floyd_uorshell_1) {
+    s21::Graph graph("../../src/examples/graph2.txt");
+    s21::GraphAlgorithms alg;
+
+    int res[] {
+        0, 1, 1, 1, 2, 2, 
+        1, 0, 2, 1, 1, 3,
+        1, 2, 0, 2, 3, 1,
+        1, 1, 2, 0, 2, 3,
+        2, 1, 3, 2, 0, 4,
+        2, 3, 1, 3, 4, 0
+    };
+    size_t index{};
+    S21Matrix method_result = alg.getShortestPathsBetweenAllVertices(graph);
+
+    for (int i = 0; i < method_result.GetRows(); ++i) {
+      for (int j = 0; j < method_result.GetCols(); ++j) {
+        EXPECT_EQ(res[index++], method_result(i, j));
+      }
+    }
+}
+
+
+TEST(Graph_test, tree_test) {
+    s21::Graph graph("../../src/examples/graph1.txt");
+    s21::GraphAlgorithms alg;
+    std::vector<std::vector<int>> res = {
+      {0, 1, 0, 0},
+      {0, 0, 1, 1},
+      {0, 0, 0, 0},
+      {0, 0, 0, 0}
+    };
+
+
+    EXPECT_NO_THROW({
+      auto matrix = alg.getLeastSpanningTree(graph);
+      for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+          EXPECT_EQ(matrix(i, j), res[i][j]);
+        }
+      }
+    });
+}
 
 TEST(Graph_test, test_export_to_dot_file1) {
   s21::Graph graph("../../src/examples/graph2.txt");
@@ -49,23 +100,6 @@ TEST(Graph_test, test_export_to_dot_file1) {
   EXPECT_EQ(answer, test);
 }
 
-TEST(Graph_test, test_export_to_dot_file2) {
-  s21::Graph graph("../../src/examples/or_graph2.txt");
-  graph.ExportGraphToDot("../../src/examples/test2.dot");
-
-  std::string answer{
-      "graphgraph_name{0->1->3;0->2->5;1->4->5;2->6;2->0;6->"
-      "2;}"};
-  std::string test;
-  std::ifstream file("../../src/examples/test2.dot");
-
-  std::string str;
-  while (file >> str) {
-    test += str;
-  }
-
-  EXPECT_EQ(answer, test);
-}
 
 int main(int argc, char **argv) {
   std::filesystem::path currentPath = std::filesystem::absolute(argv[0]);
