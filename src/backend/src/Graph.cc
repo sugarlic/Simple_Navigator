@@ -4,7 +4,7 @@
 
 void s21::Graph::LoadGraphFromFile(std::string filename) {
   std::ifstream file(filename);
-  if (!file.is_open()) throw std::invalid_argument("NO FILE");
+  if (!file.is_open()) throw std::invalid_argument("File doesn't exist");
 
   int size;
   file >> size;

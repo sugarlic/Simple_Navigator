@@ -8,10 +8,12 @@
 namespace s21 {
 class Graph {
  public:
+  Graph() = default;
   Graph(std::string filename) { LoadGraphFromFile(filename); };
   void LoadGraphFromFile(std::string filename);
   void ExportGraphToDot(std::string filename);
   S21Matrix GetGraph() { return graph_; };
+  inline bool IsEmptyGraph() const noexcept { return (graph_.GetCols() == graph_.GetRows() == 0); }
 
  private:
   S21Matrix graph_;
