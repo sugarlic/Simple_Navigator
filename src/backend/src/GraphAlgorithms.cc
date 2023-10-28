@@ -60,3 +60,42 @@ S21Matrix s21::GraphAlgorithms::getShortestPathsBetweenAllVertices(Graph &graph)
     
     return result;
 }
+
+S21Matrix s21::GraphAlgorithms::getLeastSpanningTree(Graph &graph) {
+  int matrix_size = graph.GetGraph().GetRows();
+  std::vector<int> selected(matrix_size, 0);
+  selected[0] = true;
+ 
+  int x{};
+  int y{};
+ 
+  S21Matrix result(matrix_size, matrix_size);
+  int no_edge{};
+  while (no_edge < matrix_size - 1) {
+      int min = std::numeric_limits<int>::max();
+      x = 0;
+      y = 0;
+ 
+      for (int i = 0; i < matrix_size; ++i) {
+        if (selected[i]) {
+            for (int j = 0; j < matrix_size; ++j) {
+              if (!selected[j] && graph.GetGraph()(i, j)) {
+                  if (min > graph.GetGraph()(i, j)) {
+                      min = graph.GetGraph()(i, j);
+                      x = i;
+                      y = j;
+                  }
+              }
+            }
+        }
+      }
+      result(x, y) = 1;
+      selected[y] = true;
+      no_edge++;
+    }
+    return result;
+}
+
+s21::TsmResult s21::GraphAlgorithms::solveTravelingSalesmanProblem(Graph &graph) {
+    
+}

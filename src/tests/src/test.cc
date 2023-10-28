@@ -62,9 +62,29 @@ TEST(Graph_test, floyd_uorshell_1) {
         EXPECT_EQ(res[index++], method_result(i, j));
       }
     }
-
 }
 
+
+TEST(Graph_test, tree_test) {
+    s21::Graph graph("../../src/examples/graph1.txt");
+    s21::GraphAlgorithms alg;
+    std::vector<std::vector<int>> res = {
+      {0, 1, 0, 0},
+      {0, 0, 1, 1},
+      {0, 0, 0, 0},
+      {0, 0, 0, 0}
+    };
+
+
+    EXPECT_NO_THROW({
+      auto matrix = alg.getLeastSpanningTree(graph);
+      for (int i = 0; i < 4; ++i) {
+        for (int j = 0; j < 4; ++j) {
+          EXPECT_EQ(matrix(i, j), res[i][j]);
+        }
+      }
+    });
+}
 
 TEST(Graph_test, test_export_to_dot_file1) {
   s21::Graph graph("../../src/examples/graph2.txt");
