@@ -38,7 +38,7 @@ void SetupGraphPath(s21::Graph& graph);
 void ShortestTwoVertices(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void ShortestAllVertices(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void SpanningTree(s21::Graph& graph, s21::GraphAlgorithms& algos);
-
+void SalesmanResult(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void ParseAnswer(const char symbol) {
   if (symbol < '1' || symbol > '7') return;
   static s21::Graph graph;
@@ -63,7 +63,7 @@ void ParseAnswer(const char symbol) {
       SpanningTree(graph, algos);
       break;
     case '7':
-
+      SalesmanResult(graph, algos);
       break;
   };
 }
@@ -94,6 +94,7 @@ void SetupGraphPath(s21::Graph& graph) {
 void ShortestTwoVertices(s21::Graph& graph, s21::GraphAlgorithms& algos) {
   int vertex1{}, vertex2{};
   PrintIfGraphNotSet(graph);
+  if (graph.IsEmptyGraph()) return;
   std::cout << "\t[ Enter two vertex ]: ";
   std::cin >> vertex1 >> vertex2;
   std::cout << "\t[ Answer is: "
@@ -103,6 +104,7 @@ void ShortestTwoVertices(s21::Graph& graph, s21::GraphAlgorithms& algos) {
 
 void ShortestAllVertices(s21::Graph& graph, s21::GraphAlgorithms& algos) {
   PrintIfGraphNotSet(graph);
+  if (graph.IsEmptyGraph()) return;
   S21Matrix matrix_result;
   matrix_result = algos.GetShortestPathsBetweenAllVertices(graph);
   for (int i = 0; i < matrix_result.GetRows(); ++i) {
@@ -115,6 +117,7 @@ void ShortestAllVertices(s21::Graph& graph, s21::GraphAlgorithms& algos) {
 
 void SpanningTree(s21::Graph& graph, s21::GraphAlgorithms& algos) {
   PrintIfGraphNotSet(graph);
+  if (graph.IsEmptyGraph()) return;
   S21Matrix matrix_result;
   matrix_result = algos.GetLeastSpanningTree(graph);
   for (int i = 0; i < matrix_result.GetRows(); ++i) {
@@ -124,7 +127,14 @@ void SpanningTree(s21::Graph& graph, s21::GraphAlgorithms& algos) {
     std::cout << "\n";
   }
 }
-
+void SalesmanResult(s21::Graph& graph, s21::GraphAlgorithms& algos) {
+  PrintIfGraphNotSet(graph);
+  if (graph.IsEmptyGraph()) return;
+  auto res = algos.SolveTravelingSalesmanProblem(graph);
+  std::cout << "Distance: " << res.distance << "\nVertices:";
+  for (auto vert : res.vertices) std::cout << vert + 1 << " ";
+  std::cout << "\n";
+};
 /*
   Komi-Voyager
 */

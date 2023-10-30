@@ -1,9 +1,12 @@
 #include "s21_graph_algorithms.h"
 
+#include <limits>
 #include <queue>
+#include <random>
+namespace s21 {
 int MinDistance(const std::vector<int> &distance,
                 const std::vector<bool> &checked, int matrix_size);
-                
+
 bool IsNotVisited(const std::vector<int> &v, int vertex) {
   bool res{true};
 
@@ -21,7 +24,7 @@ void InitializationVisitVector(std::vector<std::vector<bool>> &v,
       if (graph_matrix(i, j)) v[i][j] = true;
 }
 
-void InitializationVertexStack(s21::Stack<std::pair<int, int>> &stack,
+void InitializationVertexStack(Stack<std::pair<int, int>> &stack,
                                const S21Matrix &graph_matrix, int startVertex) {
   for (int i = graph_matrix.GetCols() - 1; i >= startVertex; i--) {
     if (graph_matrix(startVertex, i)) stack.Push({startVertex, i});
@@ -29,12 +32,12 @@ void InitializationVertexStack(s21::Stack<std::pair<int, int>> &stack,
   if (stack.Empty()) stack.Push({startVertex, 0});
 }
 
-std::vector<int> s21::GraphAlgorithms::DepthFirstSearch(Graph &graph,
-                                                        int startVertex) {
+std::vector<int> GraphAlgorithms::DepthFirstSearch(Graph &graph,
+                                                   int startVertex) {
   S21Matrix graph_matrix = graph.GetGraph();
   if (startVertex >= graph_matrix.GetRows()) return std::vector<int>();
   std::vector<int> res;
-  s21::Stack<std::pair<int, int>> stack;
+  Stack<std::pair<int, int>> stack;
   std::vector<std::vector<bool>> is_white(
       graph_matrix.GetRows(), std::vector<bool>(graph_matrix.GetCols()));
 
@@ -59,8 +62,8 @@ std::vector<int> s21::GraphAlgorithms::DepthFirstSearch(Graph &graph,
   return res;
 }
 
-std::vector<int> s21::GraphAlgorithms::BreadthFirstSearch(Graph &graph,
-                                                          int startVertex) {
+std::vector<int> GraphAlgorithms::BreadthFirstSearch(Graph &graph,
+                                                     int startVertex) {
   S21Matrix graph_matrix = graph.GetGraph();
   if (startVertex >= graph_matrix.GetRows()) return std::vector<int>();
 
@@ -87,9 +90,8 @@ std::vector<int> s21::GraphAlgorithms::BreadthFirstSearch(Graph &graph,
   return res;
 }
 
-int s21::GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph,
-                                                         int vertex1,
-                                                         int vertex2) {
+int GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph, int vertex1,
+                                                    int vertex2) {
   auto graph_map = graph.GetGraph();
   int matrix_size = graph_map.GetRows();
 
@@ -119,8 +121,7 @@ int MinDistance(const std::vector<int> &distance,
   return min_index;
 }
 
-S21Matrix s21::GraphAlgorithms::GetShortestPathsBetweenAllVertices(
-    Graph &graph) {
+S21Matrix GraphAlgorithms::GetShortestPathsBetweenAllVertices(Graph &graph) {
   auto result = graph.GetGraph();
 
   int matrix_size = result.GetCols();
@@ -139,7 +140,7 @@ S21Matrix s21::GraphAlgorithms::GetShortestPathsBetweenAllVertices(
   return result;
 }
 
-S21Matrix s21::GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
+S21Matrix GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
   auto graph_map = graph.GetGraph();
   int matrix_size = graph_map.GetRows();
   std::vector<int> selected(matrix_size, 0);
@@ -175,5 +176,108 @@ S21Matrix s21::GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
   return result;
 }
 
-s21::TsmResult s21::GraphAlgorithms::SolveTravelingSalesmanProblem(
-    Graph &graph) {}
+// TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(
+//     Graph &graph) {}
+TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(Graph &graph) {
+  // Number of vertices in the graph
+  auto graph_map = graph.GetGraph();
+  int num_vertices = graph_map.GetRows();
+
+  // Initialize the pheromone matrix with small values
+  std::vector<std::vector<double>> pheromone_matrix(
+      num_vertices, std::vector<double>(num_vertices, 0.01));
+
+  // Number of ants
+  int num_ants = num_vertices;
+
+  // Number of iterations
+  int num_iterations = 1000;
+
+  // Best route found so far
+  std::vector<int> best_route;
+  double best_distance = std::numeric_limits<double>::max();
+
+  // Ant colony algorithm
+  for (int iter = 0; iter < num_iterations; iter++) {
+    // Construct solutions for each ant
+    for (int ant = 0; ant < num_ants; ant++) {
+      std::vector<int> route;
+      std::vector<bool> visited(num_vertices, false);
+      int current_vertex = 0;  // Start from vertex 0
+
+      // Traverse all vertices
+      for (int i = 0; i < num_vertices - 1; i++) {
+        visited[current_vertex] = true;
+        route.push_back(current_vertex);
+
+        // Calculate the probabilities for the next vertex
+        std::vector<double> probabilities(num_vertices, 0.0);
+        double total = 0.0;
+
+        for (int j = 0; j < num_vertices; j++) {
+          if (!visited[j]) {
+            probabilities[j] = pow(pheromone_matrix[current_vertex][j], 1.0) *
+                               pow(1.0 / graph_map(current_vertex, j), 5.0);
+            total += probabilities[j];
+          }
+        }
+
+        // Select the next vertex based on the probabilities
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_real_distribution<> dis(0.0, total);
+        double random = dis(gen);
+
+        double sum = 0.0;
+        int next_vertex = -1;
+
+        for (int j = 0; j < num_vertices; j++) {
+          if (!visited[j]) {
+            sum += probabilities[j];
+            if (sum >= random) {
+              next_vertex = j;
+              break;
+            }
+          }
+        }
+
+        current_vertex = next_vertex;
+      }
+
+      // Add the last vertex and return to the starting vertex
+      route.push_back(current_vertex);
+      route.push_back(0);
+
+      // Calculate the distance of the route
+      double distance = 0.0;
+      for (int i = 0; i < num_vertices; i++) {
+        distance += graph_map(route[i], route[i + 1]);
+      }
+
+      // Update the best route if a shorter route is found
+      if (distance < best_distance) {
+        best_route = route;
+        best_distance = distance;
+      }
+    }
+
+    // Update the pheromone matrix
+    double evaporation_rate = 0.1;
+    double pheromone_deposit = 100.0 / best_distance;
+
+    for (int i = 0; i < num_vertices; i++) {
+      for (int j = 0; j < num_vertices; j++) {
+        pheromone_matrix[i][j] *= (1.0 - evaporation_rate);
+      }
+    }
+
+    for (int i = 0; i < num_vertices; i++) {
+      int from = best_route[i];
+      int to = best_route[i + 1];
+      pheromone_matrix[from][to] += pheromone_deposit;
+      pheromone_matrix[to][from] += pheromone_deposit;
+    }
+  }
+  return {best_route, best_distance};
+}
+}  // namespace s21
