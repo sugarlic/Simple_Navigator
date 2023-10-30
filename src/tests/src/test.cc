@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 
+#include "../../s21_graph_algorithms/includes/s21_graph_algorithms.h"
 #include "s21_graph.h"
 #include "s21_graph_algorithms.h"
 #include "s21_matrix.h"
@@ -86,6 +87,146 @@ TEST(Graph_test, test_export_to_dot_file1) {
   }
 
   EXPECT_EQ(answer, test);
+}
+
+TEST(Graph_test, test_DFS1) {
+  s21::Graph graph("../../src/examples/graph2.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {0, 1, 3, 4, 2, 5};
+  std::vector<int> res = alg.DepthFirstSearch(graph, 0);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_DFS2) {
+  s21::Graph graph("../../src/examples/graph2.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {4};
+  std::vector<int> res = alg.DepthFirstSearch(graph, 4);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_DFS3) {
+  s21::Graph graph("../../src/examples/or_graph1.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {0, 1, 2, 3};
+  std::vector<int> res = alg.DepthFirstSearch(graph, 0);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_DFS4) {
+  s21::Graph graph("../../src/examples/big_graph.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {0, 1, 4, 5, 2, 3, 6, 8, 7};
+  std::vector<int> res = alg.DepthFirstSearch(graph, 0);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_DFS5) {
+  s21::Graph graph("../../src/examples/big_graph.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {2};
+  std::vector<int> res = alg.DepthFirstSearch(graph, 2);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_DFS6) {
+  s21::Graph graph("../../src/examples/big_graph.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {3, 6, 8, 7};
+  std::vector<int> res = alg.DepthFirstSearch(graph, 3);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_BFS1) {
+  s21::Graph graph("../../src/examples/big_graph.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+  std::vector<int> res = alg.BreadthFirstSearch(graph, 0);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_BFS2) {
+  s21::Graph graph("../../src/examples/big_graph.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {3, 6, 7, 8};
+  std::vector<int> res = alg.BreadthFirstSearch(graph, 3);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_BFS3) {
+  s21::Graph graph("../../src/examples/big_graph.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {2};
+  std::vector<int> res = alg.BreadthFirstSearch(graph, 2);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_BFS4) {
+  s21::Graph graph("../../src/examples/or_graph1.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {0, 1, 2, 3};
+  std::vector<int> res = alg.BreadthFirstSearch(graph, 0);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
 }
 
 int main(int argc, char **argv) {

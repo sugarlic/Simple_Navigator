@@ -1,35 +1,91 @@
 #include "s21_graph_algorithms.h"
 
-#include <vector>
+#include <queue>
+int MinDistance(const std::vector<int> &distance,
+                const std::vector<bool> &checked, int matrix_size);
+                
+bool IsNotVisited(const std::vector<int> &v, int vertex) {
+  bool res{true};
+
+  for (size_t i = 0; i < v.size(); i++) {
+    if (v[i] == vertex) res = false;
+  }
+
+  return res;
+}
+
+void InitializationVisitVector(std::vector<std::vector<bool>> &v,
+                               const S21Matrix &graph_matrix) {
+  for (int i = 0; i < graph_matrix.GetRows(); i++)
+    for (int j = 0; j < graph_matrix.GetRows(); j++)
+      if (graph_matrix(i, j)) v[i][j] = true;
+}
+
+void InitializationVertexStack(s21::Stack<std::pair<int, int>> &stack,
+                               const S21Matrix &graph_matrix, int startVertex) {
+  for (int i = graph_matrix.GetCols() - 1; i >= startVertex; i--) {
+    if (graph_matrix(startVertex, i)) stack.Push({startVertex, i});
+  }
+  if (stack.Empty()) stack.Push({startVertex, 0});
+}
+
 std::vector<int> s21::GraphAlgorithms::DepthFirstSearch(Graph &graph,
                                                         int startVertex) {
-  auto graph_map = graph.GetGraph();
-  auto vertices_count = graph_map.GetCols();
-  if (startVertex < 0 || startVertex >= vertices_count) return {startVertex};
-  std::vector<int> traversed_vertices;
-  std::vector<bool> visited(vertices_count, false);
-  s21::Stack<int> stack;
-  stack.Push(startVertex);
+  S21Matrix graph_matrix = graph.GetGraph();
+  if (startVertex >= graph_matrix.GetRows()) return std::vector<int>();
+  std::vector<int> res;
+  s21::Stack<std::pair<int, int>> stack;
+  std::vector<std::vector<bool>> is_white(
+      graph_matrix.GetRows(), std::vector<bool>(graph_matrix.GetCols()));
+
+  InitializationVisitVector(is_white, graph_matrix);
+
+  InitializationVertexStack(stack, graph_matrix, startVertex);
 
   while (!stack.Empty()) {
-    int current_vertex = stack.Top();
+    std::pair<int, int> pos = stack.Top();
     stack.Pop();
-    if (!visited[current_vertex]) {
-      traversed_vertices.push_back(current_vertex);
-      visited[current_vertex] = true;
-      for (int neighbor = 0; neighbor < vertices_count; ++neighbor) {
-        if (graph_map(current_vertex, neighbor) && !visited[neighbor]) {
-          stack.Push(neighbor);
-        }
+    if (IsNotVisited(res, pos.first)) res.push_back(pos.first);
+
+    if (is_white[pos.first][pos.second]) {
+      is_white[pos.first][pos.second] = false;
+
+      for (int i = graph_matrix.GetCols() - 1; i >= pos.second; i--) {
+        stack.Push({pos.second, i});
       }
     }
   }
 
-  return traversed_vertices;
+  return res;
 }
 
-int MinDistance(const std::vector<int> &distance,
-                const std::vector<bool> &checked, int matrix_size);
+std::vector<int> s21::GraphAlgorithms::BreadthFirstSearch(Graph &graph,
+                                                          int startVertex) {
+  S21Matrix graph_matrix = graph.GetGraph();
+  if (startVertex >= graph_matrix.GetRows()) return std::vector<int>();
+
+  std::vector<int> res;
+  std::vector<bool> is_visited(graph_matrix.GetRows());
+
+  std::queue<int> q;
+  q.push(startVertex);
+  is_visited[startVertex] = true;
+
+  while (!q.empty()) {
+    int vertex = q.front();
+    q.pop();
+    res.push_back(vertex);
+
+    for (int i = 0; i < graph_matrix.GetCols(); i++) {
+      if (graph_matrix(vertex, i) && !is_visited[i]) {
+        q.push(i);
+        is_visited[i] = true;
+      }
+    }
+  }
+
+  return res;
+}
 
 int s21::GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph,
                                                          int vertex1,

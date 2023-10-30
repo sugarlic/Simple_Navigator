@@ -4,5 +4,7 @@ add_executable(${EXE_NAME}
     ${${EXE_NAME}_SRCS}
 )
 target_link_libraries(${EXE_NAME} 
-    ${P_NAME}_Backend
+    containers
+    s21_graph
+    s21_graph_algorithms
 )

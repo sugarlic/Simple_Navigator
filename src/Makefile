@@ -14,7 +14,7 @@ else ifeq ($(UNAME_S),Darwin)
 else
 	OPEN_CMD = 
 endif
-all: install tests open
+all: install open
 build:
 	@cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE="Release" -Wno-dev -B ${BUILD_PATH} .
 build_d:

@@ -1,7 +1,7 @@
 #include <string>
 
 #include "s21_graph.h"
-#include "GraphAlgorithms.h"
+#include "s21_graph_algorithms.h"
 
 void ParseAnswer(const char symbol);
 
@@ -27,7 +27,8 @@ int main() {
 
 void PrintIfGraphNotSet(const s21::Graph& graph) {
   if (graph.IsEmptyGraph())
-    std::cout << "\t[ Graph is not set. Before any operations, please, setup graph from file. ]\n";
+    std::cout << "\t[ Graph is not set. Before any operations, please, setup "
+                 "graph from file. ]\n";
   return;
 }
 
@@ -45,25 +46,25 @@ void ParseAnswer(const char symbol) {
   switch (symbol) {
     case '1':
       SetupGraphPath(graph);
-    break;
+      break;
     case '2':
       // BFS
-    break;
+      break;
     case '3':
       // DFS
-    break;
+      break;
     case '4':
       ShortestTwoVertices(graph, algos);
-    break;
+      break;
     case '5':
       ShortestAllVertices(graph, algos);
-    break;
+      break;
     case '6':
       SpanningTree(graph, algos);
-    break;
+      break;
     case '7':
-    
-    break;
+
+      break;
   };
 }
 
@@ -95,13 +96,15 @@ void ShortestTwoVertices(s21::Graph& graph, s21::GraphAlgorithms& algos) {
   PrintIfGraphNotSet(graph);
   std::cout << "\t[ Enter two vertex ]: ";
   std::cin >> vertex1 >> vertex2;
-  std::cout << "\t[ Answer is: " << algos.getShortestPathBetweenVertices(graph, vertex1, vertex2) << "]\n";
+  std::cout << "\t[ Answer is: "
+            << algos.GetShortestPathBetweenVertices(graph, vertex1, vertex2)
+            << "]\n";
 }
 
 void ShortestAllVertices(s21::Graph& graph, s21::GraphAlgorithms& algos) {
   PrintIfGraphNotSet(graph);
   S21Matrix matrix_result;
-  matrix_result = algos.getShortestPathsBetweenAllVertices(graph);
+  matrix_result = algos.GetShortestPathsBetweenAllVertices(graph);
   for (int i = 0; i < matrix_result.GetRows(); ++i) {
     for (int j = 0; j < matrix_result.GetCols(); ++j) {
       std::cout << matrix_result(i, j) << "\t";
@@ -113,7 +116,7 @@ void ShortestAllVertices(s21::Graph& graph, s21::GraphAlgorithms& algos) {
 void SpanningTree(s21::Graph& graph, s21::GraphAlgorithms& algos) {
   PrintIfGraphNotSet(graph);
   S21Matrix matrix_result;
-  matrix_result = algos.getLeastSpanningTree(graph);
+  matrix_result = algos.GetLeastSpanningTree(graph);
   for (int i = 0; i < matrix_result.GetRows(); ++i) {
     for (int j = 0; j < matrix_result.GetCols(); ++j) {
       std::cout << matrix_result(i, j) << "\t";

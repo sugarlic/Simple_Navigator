@@ -17,6 +17,7 @@ struct TsmResult {
 class GraphAlgorithms {
  public:
   std::vector<int> DepthFirstSearch(Graph &graph, int startVertex);
+  std::vector<int> BreadthFirstSearch(Graph &graph, int startVertex);
   int GetShortestPathBetweenVertices(Graph &graph, int vertex1, int vertex2);
   S21Matrix GetShortestPathsBetweenAllVertices(Graph &graph);
   S21Matrix GetLeastSpanningTree(Graph &graph);
