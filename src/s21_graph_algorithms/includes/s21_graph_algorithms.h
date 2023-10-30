@@ -9,6 +9,7 @@ namespace s21 {
 class GraphAlgorithms {
  public:
   std::vector<int> DepthFirstSearch(Graph &graph, int startVertex);
+  std::vector<int> BreadthFirstSearch(Graph &graph, int startVertex);
   int getShortestPathBetweenVertices(Graph &graph, int vertex1, int vertex2);
   S21Matrix getShortestPathsBetweenAllVertices(Graph &graph);
 };

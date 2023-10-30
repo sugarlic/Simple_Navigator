@@ -138,6 +138,62 @@ TEST(Graph_test, test_DFS5) {
   }
 }
 
+TEST(Graph_test, test_BFS1) {
+  s21::Graph graph("../../src/examples/big_graph.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {0, 1, 2, 3, 4, 5, 6, 7, 8};
+  std::vector<int> res = alg.BreadthFirstSearch(graph, 0);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_BFS2) {
+  s21::Graph graph("../../src/examples/big_graph.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {3, 6, 7, 8};
+  std::vector<int> res = alg.BreadthFirstSearch(graph, 3);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_BFS3) {
+  s21::Graph graph("../../src/examples/big_graph.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {2};
+  std::vector<int> res = alg.BreadthFirstSearch(graph, 2);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_BFS4) {
+  s21::Graph graph("../../src/examples/or_graph1.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {0, 1, 2, 3};
+  std::vector<int> res = alg.BreadthFirstSearch(graph, 0);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
 int main(int argc, char **argv) {
   std::filesystem::path currentPath = std::filesystem::absolute(argv[0]);
   std::filesystem::path parentFolder = currentPath.parent_path();
