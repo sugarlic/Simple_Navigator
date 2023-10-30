@@ -20,23 +20,25 @@ void InitializationVisitVector(std::vector<std::vector<bool>> &v,
 }
 
 void InitializationVertexStack(s21::Stack<std::pair<int, int>> &stack,
-                               const S21Matrix &graph_matrix) {
-  for (int i = graph_matrix.GetCols() - 1; i >= 1; i--) {
-    if (graph_matrix(0, i)) stack.Push({0, i});
+                               const S21Matrix &graph_matrix, int startVertex) {
+  for (int i = graph_matrix.GetCols() - 1; i >= startVertex; i--) {
+    if (graph_matrix(startVertex, i)) stack.Push({startVertex, i});
   }
+  if (stack.Empty()) stack.Push({startVertex, 0});
 }
 
 std::vector<int> s21::GraphAlgorithms::DepthFirstSearch(Graph &graph,
                                                         int startVertex) {
+  S21Matrix graph_matrix = graph.GetGraph();
+  if (startVertex >= graph_matrix.GetRows()) return std::vector<int>();
   std::vector<int> res;
   s21::Stack<std::pair<int, int>> stack;
-  S21Matrix graph_matrix = graph.GetGraph();
   std::vector<std::vector<bool>> is_white(
       graph_matrix.GetRows(), std::vector<bool>(graph_matrix.GetCols()));
 
   InitializationVisitVector(is_white, graph_matrix);
 
-  InitializationVertexStack(stack, graph_matrix);
+  InitializationVertexStack(stack, graph_matrix, startVertex);
 
   while (!stack.Empty()) {
     std::pair<int, int> pos = stack.Top();
@@ -52,18 +54,13 @@ std::vector<int> s21::GraphAlgorithms::DepthFirstSearch(Graph &graph,
     }
   }
 
-  auto it = res.begin();
-  while (*it != startVertex) {
-    res.erase(it);
-  }
-
   return res;
 }
 
 std::vector<int> s21::GraphAlgorithms::BreadthFirstSearch(Graph &graph,
                                                           int startVertex) {
   S21Matrix graph_matrix = graph.GetGraph();
-  if (startVertex > graph_matrix.GetRows()) return std::vector<int>();
+  if (startVertex >= graph_matrix.GetRows()) return std::vector<int>();
 
   std::vector<int> res;
   std::vector<bool> is_visited(graph_matrix.GetRows());

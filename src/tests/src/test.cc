@@ -86,7 +86,7 @@ TEST(Graph_test, test_DFS2) {
   s21::Graph graph("../../src/examples/graph2.txt");
   s21::GraphAlgorithms alg;
 
-  std::vector<int> answer = {4, 2, 5};
+  std::vector<int> answer = {4};
   std::vector<int> res = alg.DepthFirstSearch(graph, 4);
 
   EXPECT_EQ(answer.size(), res.size());
@@ -128,8 +128,22 @@ TEST(Graph_test, test_DFS5) {
   s21::Graph graph("../../src/examples/big_graph.txt");
   s21::GraphAlgorithms alg;
 
-  std::vector<int> answer = {2, 3, 6, 8, 7};
+  std::vector<int> answer = {2};
   std::vector<int> res = alg.DepthFirstSearch(graph, 2);
+
+  EXPECT_EQ(answer.size(), res.size());
+
+  for (size_t i = 0; i < answer.size(); i++) {
+    EXPECT_EQ(answer[i], res[i]);
+  }
+}
+
+TEST(Graph_test, test_DFS6) {
+  s21::Graph graph("../../src/examples/big_graph.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<int> answer = {3, 6, 8, 7};
+  std::vector<int> res = alg.DepthFirstSearch(graph, 3);
 
   EXPECT_EQ(answer.size(), res.size());
 
