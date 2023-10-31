@@ -1,9 +1,19 @@
 #include "s21_graph_algorithms.h"
 
+#include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <ctime>
+#include <iostream>
 #include <limits>
 #include <queue>
 #include <random>
+#include <set>
+#include <vector>
+
+#include "AntColony.h"
 namespace s21 {
+
 int MinDistance(const std::vector<int> &distance,
                 const std::vector<bool> &checked, int matrix_size);
 
@@ -181,103 +191,107 @@ S21Matrix GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
 TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(Graph &graph) {
   // Number of vertices in the graph
   auto graph_map = graph.GetGraph();
-  int num_vertices = graph_map.GetRows();
+  ColonyData data(graph_map);
+  AntColony colony(2, 1, 0.1, data);
+  return colony.run();
+  // int num_vertices = graph_map.GetRows();
 
-  // Initialize the pheromone matrix with small values
-  std::vector<std::vector<double>> pheromone_matrix(
-      num_vertices, std::vector<double>(num_vertices, 0.01));
+  // // Initialize the pheromone matrix with small values
+  // std::vector<std::vector<double>> pheromone_matrix(
+  //     num_vertices, std::vector<double>(num_vertices, 0.01));
 
-  // Number of ants
-  int num_ants = num_vertices;
+  // // Number of ants
+  // int num_ants = num_vertices;
 
-  // Number of iterations
-  int num_iterations = 1000;
+  // // Number of iterations
+  // int num_iterations = 30;
 
-  // Best route found so far
-  std::vector<int> best_route;
-  double best_distance = std::numeric_limits<double>::max();
+  // // Best route found so far
+  // std::vector<int> best_route;
+  // double best_distance = std::numeric_limits<double>::max();
 
-  // Ant colony algorithm
-  for (int iter = 0; iter < num_iterations; iter++) {
-    // Construct solutions for each ant
-    for (int ant = 0; ant < num_ants; ant++) {
-      std::vector<int> route;
-      std::vector<bool> visited(num_vertices, false);
-      int current_vertex = 0;  // Start from vertex 0
+  // // Ant colony algorithm
+  // for (int iter = 0; iter < num_iterations; iter++) {
+  //   // Construct solutions for each ant
+  //   for (int ant = 0; ant < num_ants; ant++) {
+  //     std::vector<int> route;
+  //     std::vector<bool> visited(num_vertices, false);
+  //     int current_vertex = 0;  // Start from vertex 0
 
-      // Traverse all vertices
-      for (int i = 0; i < num_vertices - 1; i++) {
-        visited[current_vertex] = true;
-        route.push_back(current_vertex);
+  //     // Traverse all vertices
+  //     for (int i = 0; i < num_vertices - 1; i++) {
+  //       visited[current_vertex] = true;
+  //       route.push_back(current_vertex);
 
-        // Calculate the probabilities for the next vertex
-        std::vector<double> probabilities(num_vertices, 0.0);
-        double total = 0.0;
+  //       // Calculate the probabilities for the next vertex
+  //       std::vector<double> probabilities(num_vertices, 0.0);
+  //       double total = 0.0;
 
-        for (int j = 0; j < num_vertices; j++) {
-          if (!visited[j]) {
-            probabilities[j] = pow(pheromone_matrix[current_vertex][j], 1.0) *
-                               pow(1.0 / graph_map(current_vertex, j), 5.0);
-            total += probabilities[j];
-          }
-        }
+  //       for (int j = 0; j < num_vertices; j++) {
+  //         if (!visited[j]) {
+  //           probabilities[j] = pow(pheromone_matrix[current_vertex][j], 1.0)
+  //           *
+  //                              pow(1.0 / graph_map(current_vertex, j), 5.0);
+  //           total += probabilities[j];
+  //         }
+  //       }
 
-        // Select the next vertex based on the probabilities
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_real_distribution<> dis(0.0, total);
-        double random = dis(gen);
+  //       // Select the next vertex based on the probabilities
+  //       std::random_device rd;
+  //       std::mt19937 gen(rd());
+  //       std::uniform_real_distribution<> dis(0.0, total);
+  //       double random = dis(gen);
 
-        double sum = 0.0;
-        int next_vertex = -1;
+  //       double sum = 0.0;
+  //       int next_vertex = -1;
 
-        for (int j = 0; j < num_vertices; j++) {
-          if (!visited[j]) {
-            sum += probabilities[j];
-            if (sum >= random) {
-              next_vertex = j;
-              break;
-            }
-          }
-        }
+  //       for (int j = 0; j < num_vertices; j++) {
+  //         if (!visited[j]) {
+  //           sum += probabilities[j];
+  //           if (sum >= random) {
+  //             next_vertex = j;
+  //             break;
+  //           }
+  //         }
+  //       }
 
-        current_vertex = next_vertex;
-      }
+  //       current_vertex = next_vertex;
+  //     }
 
-      // Add the last vertex and return to the starting vertex
-      route.push_back(current_vertex);
-      route.push_back(0);
+  //     // Add the last vertex and return to the starting vertex
+  //     route.push_back(current_vertex);
+  //     route.push_back(0);
 
-      // Calculate the distance of the route
-      double distance = 0.0;
-      for (int i = 0; i < num_vertices; i++) {
-        distance += graph_map(route[i], route[i + 1]);
-      }
+  //     // Calculate the distance of the route
+  //     double distance = 0.0;
+  //     for (int i = 0; i < num_vertices; i++) {
+  //       distance += graph_map(route[i], route[i + 1]);
+  //     }
 
-      // Update the best route if a shorter route is found
-      if (distance < best_distance) {
-        best_route = route;
-        best_distance = distance;
-      }
-    }
+  //     // Update the best route if a shorter route is found
+  //     if (distance < best_distance) {
+  //       best_route = route;
+  //       best_distance = distance;
+  //     }
+  //   }
 
-    // Update the pheromone matrix
-    double evaporation_rate = 0.1;
-    double pheromone_deposit = 100.0 / best_distance;
+  //   // Update the pheromone matrix
+  //   double evaporation_rate = 0.2;
+  //   double pheromone_deposit = 100.0 / best_distance;
 
-    for (int i = 0; i < num_vertices; i++) {
-      for (int j = 0; j < num_vertices; j++) {
-        pheromone_matrix[i][j] *= (1.0 - evaporation_rate);
-      }
-    }
+  //   for (int i = 0; i < num_vertices; i++) {
+  //     for (int j = 0; j < num_vertices; j++) {
+  //       pheromone_matrix[i][j] *= evaporation_rate;
+  //     }
+  //   }
 
-    for (int i = 0; i < num_vertices; i++) {
-      int from = best_route[i];
-      int to = best_route[i + 1];
-      pheromone_matrix[from][to] += pheromone_deposit;
-      pheromone_matrix[to][from] += pheromone_deposit;
-    }
-  }
-  return {best_route, best_distance};
+  //   for (int i = 0; i < num_vertices; i++) {
+  //     int from = best_route[i];
+  //     int to = best_route[i + 1];
+  //     pheromone_matrix[from][to] += pheromone_deposit;
+  //     pheromone_matrix[to][from] += pheromone_deposit;
+  //   }
+  // }
+  // return {best_route, best_distance};
 }
 }  // namespace s21

@@ -16,6 +16,7 @@ int main() {
     std::cout << "5. Search shortest path between ALL vertices\n";
     std::cout << "6. Get least spanning tree\n";
     std::cout << "7. Solve Salesman problem\n";
+    std::cout << "8. Print graph\n";
     std::cout << "Enter the \"q\" to exit!\n";
     std::cin >> symbol;
     ParseAnswer(symbol);
@@ -39,8 +40,9 @@ void ShortestTwoVertices(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void ShortestAllVertices(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void SpanningTree(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void SalesmanResult(s21::Graph& graph, s21::GraphAlgorithms& algos);
+void PrintGraph(s21::Graph& graph);
 void ParseAnswer(const char symbol) {
-  if (symbol < '1' || symbol > '7') return;
+  if (symbol < '1' || symbol > '8') return;
   static s21::Graph graph;
   static s21::GraphAlgorithms algos;
   switch (symbol) {
@@ -64,6 +66,9 @@ void ParseAnswer(const char symbol) {
       break;
     case '7':
       SalesmanResult(graph, algos);
+      break;
+    case '8':
+      PrintGraph(graph);
       break;
   };
 }
@@ -132,8 +137,17 @@ void SalesmanResult(s21::Graph& graph, s21::GraphAlgorithms& algos) {
   if (graph.IsEmptyGraph()) return;
   auto res = algos.SolveTravelingSalesmanProblem(graph);
   std::cout << "Distance: " << res.distance << "\nVertices:";
-  for (auto vert : res.vertices) std::cout << vert + 1 << " ";
+  for (auto vert : res.vertices) std::cout << vert << " ";
   std::cout << "\n";
+};
+void PrintGraph(s21::Graph& graph) {
+  auto matrix_result = graph.GetGraph();
+  for (int i = 0; i < matrix_result.GetRows(); ++i) {
+    for (int j = 0; j < matrix_result.GetCols(); ++j) {
+      std::cout << matrix_result(i, j) << "\t";
+    }
+    std::cout << "\n";
+  }
 };
 /*
   Komi-Voyager
