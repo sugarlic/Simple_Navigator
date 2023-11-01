@@ -41,6 +41,69 @@ TEST(Graph_test, djikstra_test_1) {
   EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 3, 4), 2);
 }
 
+TEST(Graph_test, djikstra_test_2) {
+  s21::Graph graph("../../src/examples/djikstra_test.txt");
+  s21::GraphAlgorithms alg;
+
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 1, 8), 5);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 5, 4), -1);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 4, 7), 3);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 2, 9), 3);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 4, 6), 2);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 4, 8), 4);
+}
+
+TEST(Graph_test, djikstra_test_3) {
+  s21::Graph graph("../../src/examples/djikstra_test_2.txt");
+  s21::GraphAlgorithms alg;
+  const int NONPATH = -1;
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 1, 6), 2);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 1, 4), 3);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 4, 5), 2);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 4, 1), NONPATH);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 1, 15), 4);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 14, 7), 3);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 19, 3), 3);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 7, 6), 2);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 14, 16), 4);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 1, 18), 5);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 12, 14), 4);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 3, 19), 3);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 13, 2), 6);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 2, 13), 6);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 14, 2), 8);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 5, 1), NONPATH);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 2, 1), NONPATH);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 2, 1), NONPATH);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 7, 13), 3);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 2, 1), NONPATH);
+}
+
+TEST(Graph_test, djikstra_test_4_hardest) {
+  s21::Graph graph("../../src/examples/djikstra_test_3.txt");
+  s21::GraphAlgorithms alg;
+  const int NONPATH = -1;
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 20, 1), 9);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 29, 1), 21);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 22, 2), 8);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 5, 2), 7);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 20, 16), 3);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 1, 26), 9);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 20, 1), 9);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 24, 26), NONPATH);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 4, 22), 4);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 29, 2), 19);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 2, 29), 6);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 30, 28), 20);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 20, 28), 9);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 29, 14), 16);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 22, 24), 11);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 28, 26), 10);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 28, 17), 6);
+  EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 1, 5), 2);
+}
+
+
 TEST(Graph_test, floyd_uorshell_1) {
   s21::Graph graph("../../src/examples/graph2.txt");
   s21::GraphAlgorithms alg;
@@ -70,6 +133,60 @@ TEST(Graph_test, tree_test) {
         EXPECT_EQ(matrix(i, j), res[i][j]);
       }
     }
+  });
+}
+
+TEST(Graph_test, tree_test_2) {
+  s21::Graph graph("../../src/examples/djikstra_test.txt");
+  s21::GraphAlgorithms alg;
+
+  int counter{};
+  EXPECT_NO_THROW({
+    auto matrix = alg.GetLeastSpanningTree(graph);
+    for (int i = 0; i < 9; ++i) {
+      for (int j = 0; j < 9; ++j) {
+        counter += matrix(i, j);
+      }
+    }
+    EXPECT_EQ(counter, 8);
+  });
+}
+
+TEST(Graph_test, tree_test_3) {
+  s21::Graph graph("../../src/examples/least_tree.txt");
+  s21::GraphAlgorithms alg;
+
+  std::vector<std::vector<int>> res {
+    {0, 0, 1, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 4, 0, 0, 0, 0}, {0, 7, 0, 0, 0, 0, 0, 0, 0}, 
+    {0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 1, 0}, {0, 0, 0, 1, 0, 0, 0, 0, 1}, 
+    {0, 0, 0, 0, 0, 2, 0, 0, 0}, {0, 0, 0, 0, 0, 0, 1, 0, 0}, {0, 0, 0, 0, 0, 0, 0, 0, 0}
+  };
+
+  int counter{};
+  EXPECT_NO_THROW({
+    auto matrix = alg.GetLeastSpanningTree(graph);
+    for (int i = 0; i < 9; ++i) {
+      for (int j = 0; j < 9; ++j) {
+        EXPECT_EQ(matrix(i, j), res[i][j]);
+        counter += matrix(i, j);
+      }
+    }
+    EXPECT_EQ(counter, 18);
+  });
+}
+
+TEST(Graph_test, tree_test_4) {
+  s21::Graph graph("../../src/examples/least_tree_2.txt");
+  s21::GraphAlgorithms alg;
+  int counter{};
+  EXPECT_NO_THROW({
+    auto matrix = alg.GetLeastSpanningTree(graph);
+    for (int i = 0; i < 19; ++i) {
+      for (int j = 0; j < 19; ++j) {
+        counter += matrix(i, j);
+      }
+    }
+    EXPECT_EQ(counter, 23);
   });
 }
 

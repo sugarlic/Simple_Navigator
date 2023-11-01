@@ -90,8 +90,13 @@ std::vector<int> s21::GraphAlgorithms::BreadthFirstSearch(Graph &graph,
 int s21::GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph,
                                                          int vertex1,
                                                          int vertex2) {
+  if (vertex1 == 0 || vertex1 > graph.GetGraph().GetRows()) return -1;
+
   auto graph_map = graph.GetGraph();
   int matrix_size = graph_map.GetRows();
+
+  vertex1 -= 1;
+  vertex2 -= 1;
 
   std::vector<int> distance(matrix_size, std::numeric_limits<int>::max());
   distance[vertex1] = 0;
@@ -106,6 +111,7 @@ int s21::GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph,
         distance[j] = distance[index] + graph_map(index, j);
   }
 
+  if (distance[vertex2] == std::numeric_limits<int>::max()) return -1;
   return distance[vertex2];
 }
 
@@ -168,7 +174,7 @@ S21Matrix s21::GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
         }
       }
     }
-    result(x, y) = 1;
+    result(x, y) = graph_map(x, y);
     selected[y] = true;
     no_edge++;
   }
