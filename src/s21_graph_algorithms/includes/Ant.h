@@ -12,17 +12,14 @@ class Ant {
   std::set<int> available;
   double alpha;  // importance of the pheromone level
   double beta;   // importance of the visibility
+  int current_city = 0;
   ColonyData& d;
-  std::random_device rd;
-  std::mt19937 gen;
-
+  std::default_random_engine gen;
+  std::uniform_real_distribution<> dis{0.0, 1.0};
   Ant(double a, double b, ColonyData& data) : d(data) {
     alpha = a;
     beta = b;
-    trail.push_back(1);  // always start from the nest (1)
-    for (int i = 2; i <= d.N; i++) {
-      available.insert(i);
-    }
+    reset();
   }
   Ant(const Ant& other) : d(other.d) {
     trail = other.trail;
@@ -31,12 +28,16 @@ class Ant {
     beta = other.beta;
   }
   void reset() {
-    std::vector<int> L;
-    L.push_back(1);
-    trail = L;  // reset to nest.
-    for (int i = 2; i <= d.N; i++) {
+    trail = std::vector<int>{0};  // reset to nest.
+    available = std::set<int>{};
+    for (int i = 1; i < d.N; ++i) {
       available.insert(i);
     }
+  }
+  void UpdatePheramonOfLastCity() {
+    auto& pheramon_cell = d.T[current_city][trail.back()];
+    double t = (1 - d.t) * pheramon_cell + d.t * d.t0;
+    pheramon_cell = t;
   }
   void deposit() {
     double tourCost = d.tourCost(trail);
@@ -47,7 +48,7 @@ class Ant {
     for (int i = 0; i < l; i++) {
       d.T[trail[i]][trail[i + 1]] += depositAmount;
     }
-    d.T[trail[l]][trail[0]] += depositAmount;
+    if (l >= 0) d.T[trail[l]][trail[0]] += depositAmount;
   }
 
   std::vector<int> stop() {
@@ -56,56 +57,63 @@ class Ant {
     reset();
     return temp;
   }
-
+  struct ProbBundle {
+    int city{};
+    double prob{};
+    double q0{};
+  };
   void step() {
-    int currentCity = trail.back();
-    double norm = probabilityNorm(currentCity);
-    double p, gp;
-    bool moved = false;
-    double highestProb = 0;
+    current_city = trail.back();
+    double p_max = 0;
+    double p_a = GetAllowedCitiesProbSum();
     double cityHighest = 0;
-    for (std::set<int>::iterator i = available.begin(); i != available.end();
-         i++) {
-      p = moveProbability(currentCity, *i, norm);
-      if (p > highestProb) {
-        cityHighest = *i;
-        highestProb = p;
+    std::vector<ProbBundle> pV{};
+    for (auto city : available) {
+      double p = GetCityMoveProb(city) / p_a;
+      if (p > p_max) {
+        cityHighest = city;
+        p_max = p;
       }
-      gp = getRand();
-      if (gp <= p) {  // move
-        moved = true;
-        trail.push_back(*i);
-        available.erase(i);
-        break;
-      }
-    }
-    if (!moved) {
-      // make a move to the highest available prob city
-      // move to cityHighest
-      trail.push_back(cityHighest);
-      available.erase(cityHighest);
-    }
-  }
 
-  double getRand() {
-    gen = std::mt19937(rd());
-    std::uniform_real_distribution<> dis(0.0, 1.0);
-    return dis(gen);
+      // gp = GetRand();
+      pV.push_back({city, p, 0});
+      // if (gp <= p) {  // move
+      //   moved = true;
+      //   trail.push_back(*i);
+      //   available.erase(i);
+      //   break;
+      // }
+    }
+    trail.push_back(cityHighest);
+    available.erase(cityHighest);
+    UpdatePheramonOfLastCity();
+    // std::cout << "Probabilities:\n{\n";
+    // for (auto& pb : pV) {
+    //   std::cout << "city:" << pb.city << "\t p:" << pb.prob
+    //             << "\t random:" << pb.q0 << "\n";
+    // }
+    // std::cout << "}\n";
+    // if (!moved) {
+    //   // make a move to the highest available prob city
+    //   // move to cityHighest
+    //   trail.push_back(cityHighest);
+    //   available.erase(cityHighest);
+    // }
   }
-  double moveProbability(int i, int j, double norm) {
-    double p =
-        (std::pow(d.T[i][j], alpha)) * (std::pow(d.visibility[i][j], beta));
-    p /= norm;
-    return p;
+  std::default_random_engine& GetRandGen() {
+    static std::default_random_engine gen;
+    return gen;
   }
-
-  double probabilityNorm(int currentCity) {
-    int size = available.size();
+  double GetRand() { return dis(GetRandGen()); }
+  double GetCityMoveProb(int city_index) {
+    double T = std::pow(d.T[current_city][city_index], alpha);
+    double n = std::pow(d.visibility[current_city][city_index], beta);
+    return T * n;
+  }
+  double GetAllowedCitiesProbSum() {
     double norm = 0.0;
-    for (std::set<int>::iterator i = available.begin(); i != available.end();
-         i++) {
-      norm += (std::pow(d.T[currentCity][*i], alpha)) *
-              (std::pow(d.visibility[currentCity][*i], beta));
+    for (auto city : available) {
+      norm += GetCityMoveProb(city);
     }
     return norm;
   }

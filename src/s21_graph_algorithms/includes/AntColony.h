@@ -7,37 +7,36 @@
 namespace s21 {
 class AntColony {
  public:
-  int N;                 // cities
-  int M;                 // no.of ants
-  std::vector<Ant> ant;  // ants
-  double alpha;          // importance of the pheromone level
-  double beta;           // importance of the visibility
-  double evaporation;    // evaporation rate
+  int N;                  // cities
+  int M;                  // no.of ants
+  std::vector<Ant> ants;  // ants
+  double alpha;           // importance of the pheromone level
+  double beta;            // importance of the visibility
   ColonyData& d;
-  AntColony(double alpha, double beta, double evaporation, ColonyData& data)
-      : d(data) {
+  AntColony(double alpha, double beta, ColonyData& data) : d(data) {
     this->alpha = alpha;
     this->beta = beta;
-    this->evaporation = evaporation;
     N = d.N;
-    M = 30;  // ants
+    M = d.N;  // ants
     for (int i = 0; i < M; i++) {
       Ant a(alpha, beta, d);
-      ant.push_back(a);
+      ants.push_back(a);
     }
   }
 
   TsmResult run() {
     std::vector<int> path;
     double minTour, tourC;
-    for (int n = 0; n < 100; n++) {
+    for (int n = 0; n < 300; n++) {
       for (int p = 0; p < (N - 1); p++) {
         for (int i = 0; i < M; i++) {
-          ant[i].step();
+          ants[i].step();
         }
       }
-      for (int i = 0; i < M; i++) {
-        std::vector<int> p = ant[i].stop();
+      // std::vector<std::vector<int>> ants_trails;
+      for (auto& ant : ants) {
+        auto p = ant.stop();
+        // ants_trails.push_back(p);
         if (!path.size()) {
           path = p;
           minTour = d.tourCost(p);
@@ -49,9 +48,9 @@ class AntColony {
           path = p;
         }
       }
-      for (int i = 1; i <= N; i++) {
-        for (int j = 1; j <= N; j++) {
-          d.T[i][j] *= evaporation;
+      for (int i = 0; i < N; ++i) {
+        for (int j = 0; j < N; ++j) {
+          d.T[i][j] *= (1 - d.t);
         }
       }
     }

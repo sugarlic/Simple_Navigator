@@ -191,9 +191,11 @@ S21Matrix GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
 TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(Graph &graph) {
   // Number of vertices in the graph
   auto graph_map = graph.GetGraph();
-  ColonyData data(graph_map);
-  AntColony colony(2, 1, 0.1, data);
-  return colony.run();
+  ColonyData data(graph_map, 0.6, 1);
+  AntColony colony(1, 6, data);
+  auto res = colony.run();
+  for (auto &city_index : res.vertices) city_index += 1;
+  return res;
   // int num_vertices = graph_map.GetRows();
 
   // // Initialize the pheromone matrix with small values
