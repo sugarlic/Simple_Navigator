@@ -25,41 +25,47 @@ int main() {
   return 0;
 }
 
-void PrintIfGraphNotSet(const s21::Graph& graph) {
-  if (graph.IsEmptyGraph())
-    std::cout << "\t[ Graph is not set. Before any operations, please, setup "
-                 "graph from file. ]\n";
-  return;
+void PrintIfGraphNotSet() {
+    std::cout << "\n\n  [ Graph is not set. Before any operations, please, setup "
+                 "graph from file. ]\n\n";
 }
 
-void SetupGraphPath(s21::Graph& graph);
-// BFS
-// DFS
+bool SetupGraphPath(s21::Graph& graph);
+void BFS(s21::Graph& graph, s21::GraphAlgorithms& algos);
+void DFS(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void ShortestTwoVertices(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void ShortestAllVertices(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void SpanningTree(s21::Graph& graph, s21::GraphAlgorithms& algos);
 
 void ParseAnswer(const char symbol) {
+  static bool is_setuped_graph{false};
   if (symbol < '1' || symbol > '7') return;
+  if (symbol != '1' && !is_setuped_graph) {
+    PrintIfGraphNotSet();
+    return;
+  }
   static s21::Graph graph;
   static s21::GraphAlgorithms algos;
   switch (symbol) {
     case '1':
       SetupGraphPath(graph);
+      is_setuped_graph = true;
       break;
     case '2':
-      // BFS
+      BFS(graph, algos);
       break;
     case '3':
-      // DFS
+      DFS(graph, algos);
       break;
     case '4':
+      std::cout << "[ WARNING: Be sure, that graph hasn't negative weights! ]\n";
       ShortestTwoVertices(graph, algos);
       break;
     case '5':
       ShortestAllVertices(graph, algos);
       break;
     case '6':
+      std::cout << "[ WARNING: Be sure, that graphs hasn't any orientation! ]\n";
       SpanningTree(graph, algos);
       break;
     case '7':
@@ -68,7 +74,7 @@ void ParseAnswer(const char symbol) {
   };
 }
 
-void SetupGraphPath(s21::Graph& graph) {
+bool SetupGraphPath(s21::Graph& graph) {
   std::cin.ignore();
   std::cout << "\t[ Enter the path to the file: ]\n";
   std::string path;
@@ -81,19 +87,35 @@ void SetupGraphPath(s21::Graph& graph) {
     std::cout << "\t[ Sorry. Unknown error. ]";
   }
   std::cout << "\t[ Graph found and successful set! ]\n";
+  return true;
 }
 
-/*
-  BFS
-*/
+void BFS(s21::Graph& graph, s21::GraphAlgorithms& algos) {
+  int start_index{};
+  std::cout << "Please, enter the start vertex position: ";
+  std::cin >> start_index;
+  std::vector<int> result = algos.BreadthFirstSearch(graph, start_index);
+  std::cout << "[ ";
+  for (auto& element : result) {
+    std::cout << element << " ";
+  }
+  std::cout << "]\n";
+}
 
-/*
-  DFS
-*/
+void DFS(s21::Graph& graph, s21::GraphAlgorithms& algos) {
+  int start_index{};
+  std::cout << "Please, enter the start vertex position: ";
+  std::cin >> start_index;
+  std::vector<int> result = algos.DepthFirstSearch(graph, start_index);
+  std::cout << "[ ";
+  for (auto& element : result) {
+    std::cout << element << " ";
+  }
+  std::cout << "]\n";
+}
 
 void ShortestTwoVertices(s21::Graph& graph, s21::GraphAlgorithms& algos) {
   int vertex1{}, vertex2{};
-  PrintIfGraphNotSet(graph);
   std::cout << "\t[ Enter two vertex ]: ";
   std::cin >> vertex1 >> vertex2;
   std::cout << "\t[ Answer is: "
@@ -102,7 +124,6 @@ void ShortestTwoVertices(s21::Graph& graph, s21::GraphAlgorithms& algos) {
 }
 
 void ShortestAllVertices(s21::Graph& graph, s21::GraphAlgorithms& algos) {
-  PrintIfGraphNotSet(graph);
   S21Matrix matrix_result;
   matrix_result = algos.GetShortestPathsBetweenAllVertices(graph);
   for (int i = 0; i < matrix_result.GetRows(); ++i) {
@@ -114,7 +135,6 @@ void ShortestAllVertices(s21::Graph& graph, s21::GraphAlgorithms& algos) {
 }
 
 void SpanningTree(s21::Graph& graph, s21::GraphAlgorithms& algos) {
-  PrintIfGraphNotSet(graph);
   S21Matrix matrix_result;
   matrix_result = algos.GetLeastSpanningTree(graph);
   for (int i = 0; i < matrix_result.GetRows(); ++i) {
