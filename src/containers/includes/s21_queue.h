@@ -118,23 +118,24 @@ inline size_t s21::Queue<T>::Size() noexcept {
 
 template <typename T>
 void s21::Queue<T>::Push(const T& new_element) {
-  if (length == capacity) {
-    capacity += 8;
+  int free_space = capacity - length;
+  if (free_space <= 0) {
+    capacity = static_cast<double>(capacity) * 1.625f + 8.f;
     data = CppRealloc(data, length, capacity);
   }
-  data[length++] = new_element;
+  data[length] = T(new_element);
+  ++length;
 }
 
 template <typename T>
 void s21::Queue<T>::Pop() {
-  T* new_buffer = new T[length]{};
+  if (length == 0) return;
+  T* new_buffer = new T[capacity]{};
   std::copy(data + 1, data + length, new_buffer);
-  if (data) {
-    delete[] data;
-    data = nullptr;
-  }
+  delete[] data;
+  data = nullptr;
   std::swap(data, new_buffer);
-  length--;
+  --length;
 }
 
 template <typename T>

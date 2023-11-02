@@ -66,19 +66,19 @@ std::vector<int> s21::GraphAlgorithms::BreadthFirstSearch(Graph &graph,
 
   std::vector<int> res;
   std::vector<bool> is_visited(graph_matrix.GetRows());
-
-  std::queue<int> q;
-  q.push(startVertex);
+  
+  s21::Queue<int> q;
+  q.Push(startVertex);
   is_visited[startVertex] = true;
 
-  while (!q.empty()) {
-    int vertex = q.front();
-    q.pop();
+  while (!q.Empty()) {
+    int vertex = q.Front();
+    q.Pop();
     res.push_back(vertex);
 
     for (int i = 0; i < graph_matrix.GetCols(); i++) {
       if (graph_matrix(vertex, i) && !is_visited[i]) {
-        q.push(i);
+        q.Push(i);
         is_visited[i] = true;
       }
     }
