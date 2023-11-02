@@ -40,15 +40,14 @@ class ColonyData {
     }
   }
 
-  double tourCost(std::vector<int> C) {
-    int l = C.size();
-    double tourCost = 0.0;
-    l = l - 1;
+  double CalcTourCost(std::vector<int> C) {
+    int l = C.size() - 1;
+    double tour_cost = 0.0;
     for (int i = 0; i < l; i++) {
-      tourCost += cost[C[i]][C[i + 1]];
+      tour_cost += cost[C[i]][C[i + 1]];
     }
-    tourCost += cost[C[l]][C[0]];
-    return tourCost;
+    if (l >= 0) tour_cost += cost[C[l]][C[0]];
+    return tour_cost;
   }
 };
 }  // namespace s21

@@ -4,11 +4,12 @@
 #include "Ant.h"
 #include "ColonyData.h"
 #include "TsmResult.h"
+#include "limits"
 namespace s21 {
 class AntColony {
  public:
-  int N;                  // cities
-  int M;                  // no.of ants
+  int N;                  // number of cities
+  int M;                  // number of ants
   std::vector<Ant> ants;  // ants
   double alpha;           // importance of the pheromone level
   double beta;            // importance of the visibility
@@ -17,44 +18,46 @@ class AntColony {
     this->alpha = alpha;
     this->beta = beta;
     N = d.N;
-    M = d.N;  // ants
+    M = d.N;
     for (int i = 0; i < M; i++) {
       Ant a(alpha, beta, d);
       ants.push_back(a);
     }
   }
-
-  TsmResult run() {
-    std::vector<int> path;
-    double minTour, tourC;
-    for (int n = 0; n < 300; n++) {
-      for (int p = 0; p < (N - 1); p++) {
-        for (int i = 0; i < M; i++) {
-          ants[i].step();
-        }
-      }
-      // std::vector<std::vector<int>> ants_trails;
-      for (auto& ant : ants) {
-        auto p = ant.stop();
-        // ants_trails.push_back(p);
-        if (!path.size()) {
-          path = p;
-          minTour = d.tourCost(p);
-          continue;
-        }
-        tourC = d.tourCost(p);
-        if (tourC < minTour) {
-          minTour = tourC;
-          path = p;
-        }
-      }
-      for (int i = 0; i < N; ++i) {
-        for (int j = 0; j < N; ++j) {
-          d.T[i][j] *= (1 - d.t);
-        }
-      }
+  void UpdateTourPheramons(std::vector<int> tour) {
+    constexpr int Q = 50;
+    double tour_cost = d.CalcTourCost(tour);
+    double deposit_amount = Q / tour_cost;
+    int l = tour.size() - 1;
+    for (int i = 0; i < l; i++) {
+      auto& pheramon = d.T[tour[i]][tour[i + 1]];
+      pheramon = (1 - d.t) * pheramon + pheramon * deposit_amount;
     }
-    return {path, tourC};
+    if (l >= 0) {
+      auto& pheramon = d.T[tour[l]][tour[0]];
+      pheramon = (1 - d.t) * pheramon + pheramon * deposit_amount;
+    }
+  }
+  TsmResult Run() {
+    std::vector<int> best_tour;
+    double min_tour_cost = std::numeric_limits<double>::max();
+    for (int n = 0; n < 1000; n++) {
+      for (int p = 0; p < (N - 1); p++)
+        for (auto& ant : ants) ant.Step();
+      for (auto& ant : ants) {
+        auto p = ant.trail;
+        auto tour_cost = d.CalcTourCost(p);
+        if (tour_cost < min_tour_cost) {
+          min_tour_cost = tour_cost;
+          best_tour = p;
+        }
+      }
+      for (auto& ant : ants) {
+        ant.Stop();
+      }
+      UpdateTourPheramons(best_tour);
+    }
+    return {best_tour, min_tour_cost};
   }
 };
 
