@@ -148,18 +148,18 @@ S21Matrix s21::GraphAlgorithms::GetShortestPathsBetweenAllVertices(
 S21Matrix s21::GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
   auto graph_map = graph.GetGraph();
   int matrix_size = graph_map.GetRows();
-  std::vector<int> selected(matrix_size, 0);
-  selected[0] = 1;
+  std::vector<bool> selected(matrix_size, 0);
+  selected[0] = true;
 
-  int x{};
-  int y{};
+  int new_pos_x{};
+  int new_pos_y{};
 
   S21Matrix result(matrix_size, matrix_size);
   int counter{};
   while (counter < matrix_size - 1) {
     int min = std::numeric_limits<int>::max();
-    x = 0;
-    y = 0;
+    new_pos_x = 0;
+    new_pos_y = 0;
 
     for (int i = 0; i < matrix_size; ++i) {
       if (selected[i]) {
@@ -167,15 +167,15 @@ S21Matrix s21::GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
           if (!selected[j] && graph_map(i, j)) {
             if (min > graph_map(i, j)) {
               min = graph_map(i, j);
-              x = i;
-              y = j;
+              new_pos_x = i;
+              new_pos_y = j;
             }
           }
         }
       }
     }
-    result(x, y) = graph_map(x, y);
-    selected[y] = true;
+    result(new_pos_x, new_pos_y) = graph_map(new_pos_x, new_pos_y);
+    selected[new_pos_y] = true;
     counter++;
   }
   return result;
