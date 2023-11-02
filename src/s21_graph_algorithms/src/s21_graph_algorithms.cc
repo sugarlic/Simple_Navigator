@@ -149,14 +149,14 @@ S21Matrix s21::GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
   auto graph_map = graph.GetGraph();
   int matrix_size = graph_map.GetRows();
   std::vector<int> selected(matrix_size, 0);
-  selected[0] = true;
+  selected[0] = 1;
 
   int x{};
   int y{};
 
   S21Matrix result(matrix_size, matrix_size);
-  int no_edge{};
-  while (no_edge < matrix_size - 1) {
+  int counter{};
+  while (counter < matrix_size - 1) {
     int min = std::numeric_limits<int>::max();
     x = 0;
     y = 0;
@@ -176,7 +176,7 @@ S21Matrix s21::GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
     }
     result(x, y) = graph_map(x, y);
     selected[y] = true;
-    no_edge++;
+    counter++;
   }
   return result;
 }
