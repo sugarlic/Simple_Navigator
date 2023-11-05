@@ -37,6 +37,7 @@ void DFS(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void ShortestTwoVertices(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void ShortestAllVertices(s21::Graph& graph, s21::GraphAlgorithms& algos);
 void SpanningTree(s21::Graph& graph, s21::GraphAlgorithms& algos);
+void SalesmanResult(s21::Graph& graph, s21::GraphAlgorithms& algos);
 
 void PrintIfGraphNotSet() {
   std::cout << "\n\n  [ Graph is not set. Before any operations, please, setup "
@@ -48,6 +49,7 @@ void Ui::ParseAnswers(const char symbol) {
   if (symbol < '1' || symbol > '7') return;
   if (symbol != '1' && !is_setuped_graph) {
     PrintIfGraphNotSet();
+    this->AwaitScreen(1500);
     return;
   }
   static s21::Graph graph;
@@ -83,7 +85,7 @@ void Ui::ParseAnswers(const char symbol) {
       SpanningTree(graph, algos);
       break;
     case '7':
-
+        SalesmanResult(graph, algos);
       break;
   };
   this->AwaitScreen(1500);
@@ -159,4 +161,13 @@ void SpanningTree(s21::Graph& graph, s21::GraphAlgorithms& algos) {
     std::cout << "\n";
   }
 }
+
+void SalesmanResult(s21::Graph& graph, s21::GraphAlgorithms& algos) {
+  if (graph.IsEmptyGraph()) return;
+  auto res = algos.SolveTravelingSalesmanProblem(graph);
+  std::cout << "Distance: " << res.distance << "\nVertices:";
+  for (auto vert : res.vertices) std::cout << vert << " ";
+  std::cout << "\n";
+};
+
 }  // namespace s21
