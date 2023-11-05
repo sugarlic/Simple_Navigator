@@ -85,7 +85,7 @@ void Ui::ParseAnswers(const char symbol) {
       SpanningTree(graph, algos);
       break;
     case '7':
-        SalesmanResult(graph, algos);
+      SalesmanResult(graph, algos);
       break;
   };
   this->AwaitScreen(1500);

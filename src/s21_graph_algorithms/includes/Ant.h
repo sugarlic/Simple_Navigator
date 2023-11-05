@@ -1,10 +1,11 @@
 #ifndef ANT_H
 #define ANT_H
+#include <cmath>
+#include <random>
+#include <set>
+#include <vector>
+
 #include "ColonyData.h"
-#include "cmath"
-#include "random"
-#include "set"
-#include "vector"
 namespace s21 {
 class Ant {
  public:

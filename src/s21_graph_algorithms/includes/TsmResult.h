@@ -1,6 +1,7 @@
 #ifndef TSMRESULT_H
 #define TSMRESULT_H
-#include "vector"
+#include <vector>
+
 namespace s21 {
 struct TsmResult {
   std::vector<int> vertices;
