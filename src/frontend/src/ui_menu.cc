@@ -1,5 +1,6 @@
 #include "ui_menu.h"
 
+namespace s21 {
 void Ui::Init() {
   char symbol{};
   while (symbol != 'q') {
@@ -158,3 +159,4 @@ void SpanningTree(s21::Graph& graph, s21::GraphAlgorithms& algos) {
     std::cout << "\n";
   }
 }
+}  // namespace s21
