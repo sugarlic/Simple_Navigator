@@ -3,17 +3,11 @@
 
 #include <limits>
 
+#include "TsmResult.h"
 #include "s21_graph.h"
 #include "s21_queue.h"
 #include "s21_stack.h"
-
 namespace s21 {
-
-struct TsmResult {
-  std::vector<int> vertices;
-  double distance{};
-};
-
 class GraphAlgorithms {
  public:
   std::vector<int> DepthFirstSearch(Graph &graph, int startVertex);

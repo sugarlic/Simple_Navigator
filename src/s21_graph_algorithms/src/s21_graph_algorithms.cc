@@ -1,5 +1,18 @@
 #include "s21_graph_algorithms.h"
 
+#include <algorithm>
+#include <cmath>
+#include <cstdio>
+#include <ctime>
+#include <iostream>
+#include <limits>
+#include <queue>
+#include <random>
+#include <set>
+#include <vector>
+
+#include "AntColony.h"
+namespace s21 {
 int GetMinGraphDistance(const std::vector<int> &distance,
                         const std::vector<bool> &checked, int matrix_size);
 
@@ -20,7 +33,7 @@ void InitializationVisitVector(std::vector<std::vector<bool>> &v,
       if (graph_matrix(i, j)) v[i][j] = true;
 }
 
-void InitializationVertexStack(s21::Stack<std::pair<int, int>> &stack,
+void InitializationVertexStack(Stack<std::pair<int, int>> &stack,
                                const S21Matrix &graph_matrix, int startVertex) {
   for (int i = graph_matrix.GetCols() - 1; i >= startVertex; i--) {
     if (graph_matrix(startVertex, i)) stack.Push({startVertex, i});
@@ -28,12 +41,12 @@ void InitializationVertexStack(s21::Stack<std::pair<int, int>> &stack,
   if (stack.Empty()) stack.Push({startVertex, 0});
 }
 
-std::vector<int> s21::GraphAlgorithms::DepthFirstSearch(Graph &graph,
-                                                        int startVertex) {
+std::vector<int> GraphAlgorithms::DepthFirstSearch(Graph &graph,
+                                                   int startVertex) {
   S21Matrix graph_matrix = graph.GetGraph();
   if (startVertex >= graph_matrix.GetRows()) return std::vector<int>();
   std::vector<int> res;
-  s21::Stack<std::pair<int, int>> stack;
+  Stack<std::pair<int, int>> stack;
   std::vector<std::vector<bool>> is_white(
       graph_matrix.GetRows(), std::vector<bool>(graph_matrix.GetCols()));
 
@@ -58,8 +71,8 @@ std::vector<int> s21::GraphAlgorithms::DepthFirstSearch(Graph &graph,
   return res;
 }
 
-std::vector<int> s21::GraphAlgorithms::BreadthFirstSearch(Graph &graph,
-                                                          int startVertex) {
+std::vector<int> GraphAlgorithms::BreadthFirstSearch(Graph &graph,
+                                                     int startVertex) {
   S21Matrix graph_matrix = graph.GetGraph();
   if (startVertex >= graph_matrix.GetRows()) return std::vector<int>();
 
@@ -138,8 +151,7 @@ int GetMinGraphDistance(const std::vector<int> &distance,
   return min_index;
 }
 
-S21Matrix s21::GraphAlgorithms::GetShortestPathsBetweenAllVertices(
-    Graph &graph) {
+S21Matrix GraphAlgorithms::GetShortestPathsBetweenAllVertices(Graph &graph) {
   auto result = graph.GetGraph();
 
   int matrix_size = result.GetCols();
@@ -158,7 +170,7 @@ S21Matrix s21::GraphAlgorithms::GetShortestPathsBetweenAllVertices(
   return result;
 }
 
-S21Matrix s21::GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
+S21Matrix GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
   auto graph_map = graph.GetGraph();
   int matrix_size = graph_map.GetRows();
   std::vector<bool> selected(matrix_size, 0);
@@ -193,6 +205,12 @@ S21Matrix s21::GraphAlgorithms::GetLeastSpanningTree(Graph &graph) {
   }
   return result;
 }
-
-s21::TsmResult s21::GraphAlgorithms::SolveTravelingSalesmanProblem(
-    Graph &graph) {}
+TsmResult GraphAlgorithms::SolveTravelingSalesmanProblem(Graph &graph) {
+  auto graph_map = graph.GetGraph();
+  ColonyData data(graph_map, 0.7, 3);
+  AntColony colony(1, 6, data);
+  auto res = colony.Run();
+  for (auto &city_index : res.vertices) city_index += 1;
+  return res;
+}
+}  // namespace s21

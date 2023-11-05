@@ -1,7 +1,7 @@
 #include "ui_menu.h"
 
 int main() {
-  Ui menu;
+  s21::Ui menu;
   menu.Init();
   return 0;
 }
