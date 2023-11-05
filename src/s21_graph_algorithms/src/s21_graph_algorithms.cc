@@ -1,9 +1,8 @@
 #include "s21_graph_algorithms.h"
 
-#include <queue>
-int MinDistance(const std::vector<int> &distance,
-                const std::vector<bool> &checked, int matrix_size);
-                
+int GetMinGraphDistance(const std::vector<int> &distance,
+                        const std::vector<bool> &checked, int matrix_size);
+
 bool IsNotVisited(const std::vector<int> &v, int vertex) {
   bool res{true};
 
@@ -66,19 +65,19 @@ std::vector<int> s21::GraphAlgorithms::BreadthFirstSearch(Graph &graph,
 
   std::vector<int> res;
   std::vector<bool> is_visited(graph_matrix.GetRows());
-  
-  s21::Queue<int> q;
-  q.Push(startVertex);
+
+  s21::Queue<int> vertexes;
+  vertexes.Push(startVertex);
   is_visited[startVertex] = true;
 
-  while (!q.Empty()) {
-    int vertex = q.Front();
-    q.Pop();
+  while (!vertexes.Empty()) {
+    int vertex = vertexes.Front();
+    vertexes.Pop();
     res.push_back(vertex);
 
     for (int i = 0; i < graph_matrix.GetCols(); i++) {
       if (graph_matrix(vertex, i) && !is_visited[i]) {
-        q.Push(i);
+        vertexes.Push(i);
         is_visited[i] = true;
       }
     }
@@ -91,6 +90,9 @@ int s21::GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph,
                                                          int vertex1,
                                                          int vertex2) {
   if (vertex1 == 0 || vertex1 > graph.GetGraph().GetRows()) return -1;
+  if (IsNegativeWeights(graph))
+    throw std::invalid_argument(
+        "Djikstra algorithm doesn't work with non-positive weights!");
 
   auto graph_map = graph.GetGraph();
   int matrix_size = graph_map.GetRows();
@@ -103,7 +105,7 @@ int s21::GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph,
   std::vector<bool> checked(matrix_size, false);
 
   for (int i = 0; i < matrix_size - 1; ++i) {
-    int index = MinDistance(distance, checked, matrix_size);
+    int index = GetMinGraphDistance(distance, checked, matrix_size);
     checked[index] = true;
     for (int j = 0; j < matrix_size; ++j)
       if (!checked[j] && graph_map(index, j) && distance[index] != INT_MAX &&
@@ -115,8 +117,19 @@ int s21::GraphAlgorithms::GetShortestPathBetweenVertices(Graph &graph,
   return distance[vertex2];
 }
 
-int MinDistance(const std::vector<int> &distance,
-                const std::vector<bool> &checked, int matrix_size) {
+bool s21::GraphAlgorithms::IsNegativeWeights(Graph &graph) noexcept {
+  bool is_negative{false};
+  for (int i = 0; i < graph.GetGraph().GetCols() && !is_negative; ++i) {
+    for (int j = 0; j < graph.GetGraph().GetRows(); ++j) {
+      double val = graph.GetGraph()(i, j);
+      if (val < 0) is_negative = true;
+    }
+  }
+  return is_negative;
+}
+
+int GetMinGraphDistance(const std::vector<int> &distance,
+                        const std::vector<bool> &checked, int matrix_size) {
   int min = std::numeric_limits<int>::max(), min_index{};
 
   for (int i = 0; i < matrix_size; ++i)

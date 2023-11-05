@@ -103,8 +103,7 @@ TEST(Graph_test, djikstra_test_4_hardest) {
   EXPECT_EQ(alg.GetShortestPathBetweenVertices(graph, 1, 5), 2);
 }
 
-
-TEST(Graph_test, floyd_uorshell_1) {
+TEST(Graph_test, Floyd_Warshall_1) {
   s21::Graph graph("../../src/examples/graph2.txt");
   s21::GraphAlgorithms alg;
 

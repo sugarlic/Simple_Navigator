@@ -22,6 +22,9 @@ class GraphAlgorithms {
   S21Matrix GetShortestPathsBetweenAllVertices(Graph &graph);
   S21Matrix GetLeastSpanningTree(Graph &graph);
   TsmResult SolveTravelingSalesmanProblem(Graph &graph);
+
+ private:
+  bool IsNegativeWeights(Graph &graph) noexcept;
 };
 };      // namespace s21
 #endif  //  SRC_INCLUDES_S21_GRAPH_ALGORITHMS_H
