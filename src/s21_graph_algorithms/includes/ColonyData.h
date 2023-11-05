@@ -1,9 +1,12 @@
 #ifndef COLONYDATA_H
 #define COLONYDATA_H
-#include "cmath"
+
+#include <cmath>
+#include <set>
+#include <vector>
+
 #include "s21_matrix.h"
-#include "set"
-#include "vector"
+
 namespace s21 {
 class ColonyData {
  public:
