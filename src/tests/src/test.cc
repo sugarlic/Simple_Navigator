@@ -338,6 +338,43 @@ TEST(Graph_test, test_BFS4) {
     EXPECT_EQ(answer[i], res[i]);
   }
 }
+TEST(Graph_test, test_TSP_Ant_Colony) {
+  s21::Graph graph("../../src/examples/graph4.txt");
+  s21::GraphAlgorithms alg;
+  // ACO algoritm generates path depending on random values so answer is not the
+  // same each time
+  std::vector<s21::TsmResult> results = {
+      {{1, 9, 8, 3, 5, 4, 6, 10, 7, 2, 11}, 262},
+      {{1, 9, 8, 3, 4, 5, 6, 10, 7, 2, 11}, 267},
+      {{1, 9, 8, 3, 11, 2, 7, 6, 10, 4, 5}, 256},
+      {{1, 9, 8, 3, 5, 4, 10, 6, 7, 2, 11}, 259},
+      {{1, 9, 8, 3, 4, 5, 10, 6, 7, 2, 11}, 263},
+      {{1, 9, 3, 8, 4, 5, 10, 6, 7, 2, 11}, 268},
+      {{1, 9, 5, 4, 6, 10, 7, 2, 3, 8, 11}, 269}};
+  s21::TsmResult res{};
+  EXPECT_NO_THROW(res = alg.SolveTravelingSalesmanProblem(graph));
+  bool passed = false;
+  for (auto ans : results) {
+    bool distance_same = ans.distance == res.distance;
+    bool vertices_same = true;
+    if (ans.vertices.size() == res.vertices.size()) {
+      for (size_t i = 0; i < ans.vertices.size(); i++) {
+        if (ans.vertices[i] != res.vertices[i]) vertices_same = false;
+      }
+    }
+    if (distance_same && vertices_same) {
+      passed = true;
+      break;
+    }
+  }
+  EXPECT_TRUE(passed);
+}
+TEST(Graph_test, test_TSP_Ant_Colony_Empty) {
+  s21::Graph graph;
+  s21::GraphAlgorithms alg;
+
+  EXPECT_NO_THROW(alg.SolveTravelingSalesmanProblem(graph));
+}
 
 int main(int argc, char **argv) {
   std::filesystem::path currentPath = std::filesystem::absolute(argv[0]);

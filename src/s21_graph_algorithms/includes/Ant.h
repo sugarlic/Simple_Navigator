@@ -61,7 +61,6 @@ class Ant {
     double p_a = GetAllowedCitiesProbSum();
     double choosen_city = 0;
     std::vector<ProbBundle> pV{};
-    bool moved = false;
     for (auto city : available) {
       double p = GetCityMoveProb(city) / p_a;
       if (p > p_max) {

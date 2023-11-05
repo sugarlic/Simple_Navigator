@@ -9,7 +9,7 @@ class ColonyData {
  public:
   std::vector<std::vector<double>> cost;
   std::vector<std::vector<double>> visibility;
-  std::vector<std::vector<double>> T;
+  std::vector<std::vector<double>> T; // pheramon map
   int N;
   double t = 0.1;   // evaporation rate
   double t0 = 1.0;  // initial pheromon value
