@@ -63,7 +63,7 @@ s21::Queue<T>::Queue(Queue&& q) {
   if (this != &q) {
     length = 0;
     capacity = 0;
-    this->Swap(q);
+    Swap(q);
   }
 }
 
